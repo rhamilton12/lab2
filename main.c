@@ -1,58 +1,46 @@
 /*
- * File:   PIC and Galileo communication          
- *         
- * 
- * simple PIC program example
- * for UMass Lowell 16.480/552
- * 
- * Author: Roy
+ * File:   main.c
+ * Author: Danae
  *
- * Created on 2014/9/13
- */
-
-/*
-   STROBE   RA2
-   D0       RC2
-   D1       RC3
-   D2       RC4
-   D3       RC5
+ * Created on March 3, 2017, 4:50 PM
  */
 
 #include <pic16f688.h>
+#include <xc.h>
 
 void set_receive()
 {
    //1.set RA2 as input
-   TRISA2=1;
-   
+    TRISA = 0b00000100;
+    
    //2.set RC2 RC3 RC4 RC5 as input
-   TRISC=0b00111100;
+    TRISC = 0b00111100;
+    
    //3.set them as digital I/O
-   ANSEL=0;
+    ANSEL = 0;
+  
 }
-
 unsigned char receive_msg()
 {
-	unsigned char read_msg;
     set_receive();
     //1.wait strobe high
-	while(!RA2);
-    //2.wait strobe low
-	while(RA2)
-	{
-		//3.read the data
-		read_msg = PORTCbits;
-	}
+    while (PORTAbits.RA2 = 0);
     
+    //2.wait strobe low
+    while (PORTAbits.RA2 = 1);        
+    
+    //3.read the data
+    unsigned char read_msg;
+    read_msg = (PORTC >> 2) && 0b00001111; //shift right 2 & isolate bits 3-0
+        
     //4.wait strobe high
-	while(!RA2);
+    while (PORTAbits.RA2 = 0);
+    
     //5.return the data
-	return read_msg;
+    return read_msg;
 }
 
-// Main program
-void main (void)
-{
+void main(void) {
     unsigned char msg;    
     while(1)
     {  
@@ -63,5 +51,3 @@ void main (void)
         PORTCbits.RC0 = 0;
     } 
 }
-
-
