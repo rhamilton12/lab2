@@ -30,6 +30,8 @@
 //open GPIO and set the direction
 int openGPIO(int gpio, int direction )
 {
+	str buffer;
+	
      //   1.set the GPIO
 	 sprintf(buffer, "echo %d >/sys/class/gpio/export", gpio);
 	 system(buffer);
