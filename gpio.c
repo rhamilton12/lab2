@@ -95,9 +95,3 @@ int main(void)
 
         }
 }
-
-
-
-//C example:    
-sprintf(buffer, "echo \"%d\" >/sys/class/gpio/export", gpio);
-	      system(buffer);
