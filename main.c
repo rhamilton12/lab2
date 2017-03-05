@@ -10,14 +10,14 @@
 
 void set_receive()
 {
-   //1.set RA2 as input
-    TRISA = 0b00000100;
+   //1.set RA0 and RA2 as input
+    TRISA = 0b00000101;
     
    //2.set RC2 RC3 RC4 RC5 as input
     TRISC = 0b00111100;
     
-   //3.set them as digital I/O
-    ANSEL = 0;
+   //3.set them as digital I/O except RA0
+    ANSEL = 0b00000001;
   
 }
 unsigned char receive_msg()

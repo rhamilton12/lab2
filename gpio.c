@@ -49,7 +49,7 @@ int writeGPIO(unsigned int msg)
 {
 	int i;
 	int bit;
-	int pins[4] = {GP_7, GP_6, GP_5, GP_4};
+	int pins[4] = {GP_4, GP_5, GP_6, GP_7};
 	
 	for (i = 0; i < 4; i++)
 	{
