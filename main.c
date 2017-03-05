@@ -5,7 +5,7 @@
  * Created on March 3, 2017, 4:50 PM
  */
 
-#include <pic16f688.h>
+#include <pic16f18857.h>
 #include <xc.h>
 
 void set_receive()
@@ -17,24 +17,24 @@ void set_receive()
     TRISC = 0b00111100;
     
    //3.set them as digital I/O except RA0
-    ANSEL = 0b00000001;
+    ANSELA = 0b00000001;
   
 }
 unsigned char receive_msg()
 {
     set_receive();
     //1.wait strobe high
-    while (PORTAbits.RA2 = 0);
+    while (PORTAbits.RA2 == 0);
     
     //2.wait strobe low
-    while (PORTAbits.RA2 = 1);        
+    while (PORTAbits.RA2 == 1);        
     
     //3.read the data
     unsigned char read_msg;
     read_msg = (PORTC >> 2) && 0b00001111; //shift right 2 & isolate bits 3-0
         
     //4.wait strobe high
-    while (PORTAbits.RA2 = 0);
+    while (PORTAbits.RA2 == 0);
     
     //5.return the data
     return read_msg;
