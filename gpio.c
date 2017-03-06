@@ -30,14 +30,21 @@
 //open GPIO and set the direction
 int openGPIO(int gpio, int direction )
 {
-	str buffer;
+	char buffer[50];
 	
      //   1.set the GPIO
 	 sprintf(buffer, "echo %d >/sys/class/gpio/export", gpio);
 	 system(buffer);
 
 	//    2.set the direction
-	sprintf(buffer,"echo %d > /sys/class/gpio/gpio%d/direction",direction, gpio)
+	if (direction)
+	{
+			sprintf(buffer,"echo in > /sys/class/gpio/gpio%d/direction", gpio);
+	}
+	else
+	{
+			sprintf(buffer,"echo out > /sys/class/gpio/gpio%d/direction", gpio);
+	}
 	system(buffer);
 
 	//    3.set the voltage
@@ -52,16 +59,18 @@ int writeGPIO(unsigned int msg)
 	int i;
 	int bit;
 	int pins[4] = {GP_4, GP_5, GP_6, GP_7};
+	int value;
 	
 	for (i = 0; i < 4; i++)
 	{
 		value = (msg >> i) & 1;
-		writePin(pins[i], bit);
+		writePin(pins[i], value);
 	}
 }
 
 int writePin(int pin, int value)
 {
+	char buffer[50];
 	sprintf(buffer, "echo %d  > /sys/class/gpio/gpio%d/value", value, pin);
 	system(buffer);
 }
@@ -83,17 +92,17 @@ int main(void)
         while(1)
         {
               // 1.Strobe high
-			  digitalWrite(Strobe, HIGH);
+			  writePin(Strobe, 1);
 			  
               // 2.write data
-			  writeGPIO("d")
+			  writeGPIO(0xd);
 			  
               // 3.Strobe low
-  			  digitalWrite(Strobe, LOW);
+  			  writePin(Strobe, 0);
 			  sleep(10);
 
 	         //4.Strobe high
- 			  digitalWrite(Strobe, HIGH);
+ 			  writePin(Strobe, 1);
 
         }
 }
