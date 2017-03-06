@@ -18,9 +18,10 @@ void set_receive()
     
    //3.set them as digital I/O except RA0
     ANSELA = 0b00000001;
+    ANSELC = 0;
   
 }
-unsigned char receive_msg()
+int receive_msg()
 {
     set_receive();
     //1.wait strobe high
@@ -30,8 +31,11 @@ unsigned char receive_msg()
     while (PORTAbits.RA2 == 1);        
     
     //3.read the data
-    unsigned char read_msg;
-    read_msg = (PORTC >> 2) && 0b00001111; //shift right 2 & isolate bits 3-0
+    int read_msg;
+    read_msg = (PORTC >> 2) & 0xf; //shift right 2 & isolate bits 3-0
+    //read_msg = PORTC;
+    //read_msg >>= 2;
+    //read_msg = read_msg & 0xf;
         
     //4.wait strobe high
     while (PORTAbits.RA2 == 0);
@@ -41,13 +45,21 @@ unsigned char receive_msg()
 }
 
 void main(void) {
-    unsigned char msg;    
+    //unsigned char msg;   
+    RC0 = 0;
+    int msg;
     while(1)
     {  
     msg=receive_msg();
+    
     if(msg == 0xd)
-   	  PORTCbits.RC0 = 1;  //light the LED
+    {
+   	  RC0 = 1;  //light the LED
+    }
     else
-        PORTCbits.RC0 = 0;
+    {
+        RC0 = 0;
+    }
+    
     } 
 }
